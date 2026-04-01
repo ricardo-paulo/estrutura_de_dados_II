@@ -82,7 +82,7 @@ public class Main {
 
         // Questão 8
         System.out.println("Questão 8");
-        NodeSearchResult result = myTree2.searchNode(myTree2.root, 6, 1);
+        NodeSearchResult result = myTree2.searchNode(6);
         if (result.found) {
             System.out.printf("Nó: %d\n", result.node.element);
             System.out.printf("Predecessor: %d\n", result.parent.element);
@@ -109,7 +109,7 @@ public class Main {
         showPair(myTree2.root);
 
         System.out.println("Question 13");
-        NodeSearchResult searchResult = myTree2.searchNode(myTree2.root, 1, 1);
+        NodeSearchResult searchResult = myTree2.searchNode(1);
         System.out.printf("Nível do nó %d: %d", searchResult.node.element, searchResult.level);
     }
 

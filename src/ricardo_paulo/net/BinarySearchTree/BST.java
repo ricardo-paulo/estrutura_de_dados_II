@@ -49,7 +49,11 @@ public class BST {
 
     }
 
-    public NodeSearchResult searchNode (Node current, int target, int level) {
+    public NodeSearchResult searchNode (int target) {
+        return searchRecursively(root, target, 0);
+    }
+
+    private NodeSearchResult searchRecursively (Node current, int target, int level) {
         level += 1;
 
         if (current.element == root.element && current.element == target)
@@ -59,7 +63,7 @@ public class BST {
             if (current.left.element == target)
                 return new NodeSearchResult(current, current.left, level);
 
-            NodeSearchResult result = searchNode(current.left, target, level);
+            NodeSearchResult result = searchRecursively(current.left, target, level);
             if (result.found)
                 return result;
         }
@@ -69,7 +73,7 @@ public class BST {
                 return new NodeSearchResult(current, current.right, level);
             }
 
-            NodeSearchResult result = searchNode(current.right, target, level);
+            NodeSearchResult result = searchRecursively(current.right, target, level);
             if (result.found)
                 return result;
         }
@@ -78,7 +82,7 @@ public class BST {
     }
 
     public boolean removeNode (Node root, int target) {
-        NodeSearchResult result = searchNode(root, target, 1);
+        NodeSearchResult result = searchNode(target);
 
         if (result.found) {
 
