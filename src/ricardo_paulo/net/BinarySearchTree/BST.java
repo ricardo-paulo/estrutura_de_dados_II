@@ -4,6 +4,8 @@ import ricardo_paulo.net.BinarySearchTree.Components.BST_FIND_LAST_DIRECTION;
 import ricardo_paulo.net.BinarySearchTree.Components.BST_PRINT_ORDER;
 import ricardo_paulo.net.BinarySearchTree.Components.NodeSearchResult;
 
+import java.util.ArrayList;
+
 public class BST {
 
     public Node root;
@@ -133,6 +135,34 @@ public class BST {
                 return current;
             }
         }
+    }
+
+    public NodeSearchResult findPredecessor (int target) {
+        ArrayList<Integer> numbersList = new ArrayList<>();
+        NodeSearchResult refNode = searchNode(target);
+
+        if (refNode.found) {
+            findPredecessorRecursively(numbersList, root, refNode.node.element);
+
+            for(int n : numbersList) {
+                System.out.println("LISTA: " + n);
+            }
+
+            int predecessorIndex = numbersList.indexOf(target) - 1;
+            Integer predecessor = numbersList.get(predecessorIndex);
+            return searchNode(predecessor);
+        }
+
+        return new NodeSearchResult();
+    }
+
+    private void findPredecessorRecursively (ArrayList<Integer> array, Node current, int target) {
+        if (current == null || array.contains(target))
+            return;
+
+        findPredecessorRecursively(array, current.left, target);
+        array.add(current.element);
+        findPredecessorRecursively(array, current.right, target);
     }
 
     // Questão 6

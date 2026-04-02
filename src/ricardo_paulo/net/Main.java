@@ -82,13 +82,12 @@ public class Main {
 
         // Questão 8
         System.out.println("Questão 8");
-        NodeSearchResult result = myTree2.searchNode(6);
-        if (result.found) {
-            System.out.printf("Nó: %d\n", result.node.element);
-            System.out.printf("Predecessor: %d\n", result.parent.element);
-            System.out.printf("Sucessor a esquerda: %d\n", result.node.left.element);
-            System.out.printf("Sucessor a direita: %d\n", result.node.right.element);
-        }
+        int target = 13;
+        NodeSearchResult targetNode = myTree2.searchNode(target);
+        NodeSearchResult predecessor = myTree2.findPredecessor(target);
+        System.out.printf("Alvo: %d\n", target);
+        System.out.printf("Predecessor: %d\n", predecessor.node.element);
+        // System.out.printf("Sucessor: %d\n", targetNode.node.right.element);
 
         System.out.println("Questão 9");
         showInternalNodes(myTree2.root, myTree2);
