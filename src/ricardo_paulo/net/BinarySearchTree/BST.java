@@ -137,32 +137,46 @@ public class BST {
         }
     }
 
-    public NodeSearchResult findPredecessor (int target) {
+    // Caso sucessor seja false, o valor retornado será o predecessor.
+    // Caso contrário, será retornado o sucessor.
+    public NodeSearchResult findInOrder (int reference, boolean sucessor) {
+        NodeSearchResult refNode = searchNode(reference);
         ArrayList<Integer> numbersList = new ArrayList<>();
-        NodeSearchResult refNode = searchNode(target);
 
         if (refNode.found) {
-            findPredecessorRecursively(numbersList, root, refNode.node.element);
+            listInOrderRecursively(numbersList, root);
+            int referenceIndex = numbersList.indexOf(reference);
+            boolean noHasSucessor = sucessor && numbersList.size() == referenceIndex + 1;
+            boolean noHasPredecessor = !sucessor && referenceIndex - 1 < 0;
 
-            for(int n : numbersList) {
-                System.out.println("LISTA: " + n);
+            if (numbersList.size() == 1)
+                return new NodeSearchResult();
+
+            if (noHasPredecessor || noHasSucessor) {
+                return new NodeSearchResult();
             }
 
-            int predecessorIndex = numbersList.indexOf(target) - 1;
-            Integer predecessor = numbersList.get(predecessorIndex);
-            return searchNode(predecessor);
+            int targetIndex;
+            if (sucessor) {
+                targetIndex = referenceIndex + 1;
+            } else {
+                targetIndex = referenceIndex - 1;
+            }
+
+            int target = numbersList.get(targetIndex);
+            return searchNode(target);
         }
 
         return new NodeSearchResult();
     }
 
-    private void findPredecessorRecursively (ArrayList<Integer> array, Node current, int target) {
-        if (current == null || array.contains(target))
+    private void listInOrderRecursively(ArrayList<Integer> array, Node current) {
+        if (current == null)
             return;
 
-        findPredecessorRecursively(array, current.left, target);
+        listInOrderRecursively(array, current.left);
         array.add(current.element);
-        findPredecessorRecursively(array, current.right, target);
+        listInOrderRecursively(array, current.right);
     }
 
     // Questão 6

@@ -61,14 +61,16 @@ public class Main {
 
         // Questão 5 | E
         System.out.println("Questão 5 | E");
-        boolean removed = myTree2.removeNode(myTree2.root, 8);
-        System.out.println(removed);
+        int toRemove = 8;
+        boolean removed = myTree2.removeNode(myTree2.root, toRemove);
+        System.out.printf("O elemento %d foi removido: %b\n", toRemove, removed);
         myTree2.print(BST_PRINT_ORDER.PRE_ORDER, myTree2.root);
 
         // Questão 5 | F
         System.out.println("Questão 5 | F");
-        removed = myTree2.removeNode(myTree2.root, 3);
-        System.out.println(removed);
+        toRemove = 3;
+        removed = myTree2.removeNode(myTree2.root, toRemove);
+        System.out.printf("O elemento %d foi removido: %b\n", toRemove, removed);
         myTree2.print(BST_PRINT_ORDER.PRE_ORDER, myTree2.root);
 
         // Questão 6
@@ -82,12 +84,14 @@ public class Main {
 
         // Questão 8
         System.out.println("Questão 8");
-        int target = 13;
-        NodeSearchResult targetNode = myTree2.searchNode(target);
-        NodeSearchResult predecessor = myTree2.findPredecessor(target);
-        System.out.printf("Alvo: %d\n", target);
-        System.out.printf("Predecessor: %d\n", predecessor.node.element);
-        // System.out.printf("Sucessor: %d\n", targetNode.node.right.element);
+        int reference = 13;
+        NodeSearchResult referencePredecessor = myTree2.findInOrder(reference, false);
+        NodeSearchResult referenceSucessor =  myTree2.findInOrder(reference, true);
+        System.out.printf("Alvo: %d\n", reference);
+        if (referencePredecessor.found)
+            System.out.printf("Predecessor: %d\n", referencePredecessor.node.element);
+        if (referenceSucessor.found)
+            System.out.printf("Sucessor: %d\n", referenceSucessor.node.element);
 
         System.out.println("Questão 9");
         showInternalNodes(myTree2.root, myTree2);
@@ -147,7 +151,8 @@ public class Main {
             boolean hasRightChild = current.right != null;
 
             if (!isRoot && (hasLeftChild || hasRightChild)) {
-                System.out.println(current.element + " -> " + hasLeftChild + " " + hasRightChild);
+                System.out.printf("%d | Tem nó a direita: %b | Tem nó a esquerda: %b\n",
+                        current.element, hasLeftChild, hasRightChild);
             }
 
             showInternalNodes(current.left, tree);
