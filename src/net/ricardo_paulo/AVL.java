@@ -1,23 +1,24 @@
-package net.ricardo_paulo.AVL;
+package net.ricardo_paulo;
 
 import static net.ricardo_paulo.Components.Direction.*;
 
 import net.ricardo_paulo.Components.AddNodeOptions;
-import net.ricardo_paulo.BST.Node;
 import net.ricardo_paulo.Components.Direction;
+import net.ricardo_paulo.Components.Node;
 import net.ricardo_paulo.Components.RecursionOrder;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class AVL {
+public class AVL<T extends Comparable<T>> {
 
-    public Node root;
+    public Node<T> root;
 
     public AVL () {
         this.root = null;
     }
 
-    public static void rebuildAsAVL (Node reference, AVL newTree) {
+    public static void rebuildAsAVL (Node<Integer> reference, AVL<Integer> newTree) {
 
         if (reference == null)
             return;
@@ -25,18 +26,47 @@ public class AVL {
         AVL.rebuildAsAVL(reference.left, newTree);
         AVL.rebuildAsAVL(reference.right, newTree);
 
-        reference.parent = null;
-        reference.left = null;
-        reference.right = null;
+
+        Node<Integer> newNode = new Node<>(reference.element);
 
         newTree.addNode(
-                reference,
+                newNode,
                 new AddNodeOptions(false, false)
         );
 
     }
 
-    public int calcDepth (Node reference) {
+    public static <T extends Comparable<T>> boolean isAVL (Node<T> treeRoot) {
+
+        AtomicBoolean isAVL = new AtomicBoolean(true);
+
+        Main.forEachNode(treeRoot, RecursionOrder.PRE_ORDER, node -> {
+
+            boolean leftMinor = true;
+            boolean rightMajor = true;
+            boolean balanced = true;
+
+            if (node.left != null)
+                leftMinor = node.left.element.compareTo(node.element) <= 0;
+
+            if (node.right != null)
+                rightMajor = node.right.element.compareTo(node.element) >= 0;
+
+            if (checkBalancing(node) != BALANCED)
+                balanced = false;
+
+            boolean isValid = leftMinor && rightMajor && balanced;
+
+            if (!isValid)
+                isAVL.set(false);
+
+        });
+
+        return isAVL.get();
+
+    }
+
+    public int calcDepth (Node<T> reference) {
 
         if (reference == null) {
             return 0;
@@ -52,7 +82,7 @@ public class AVL {
 
     }
 
-    public static int calcHeight (Node reference) {
+    public static <T extends Comparable<T>> int calcHeight (Node<T> reference) {
 
         // O valor retornado é −1 para que o resultado seja zero-based.
         if (reference == null) {
@@ -71,7 +101,7 @@ public class AVL {
 
     }
 
-    public static int calcBF (Node reference) {
+    public static <T extends Comparable<T>> int calcBF (Node<T> reference) {
 
         int leftHeight = AVL.calcHeight(reference.left);
         int rightHeight = AVL.calcHeight(reference.right);
@@ -80,7 +110,7 @@ public class AVL {
 
     }
 
-    public Direction checkBalancing (Node reference) {
+    public static <T extends Comparable<T>> Direction checkBalancing (Node<T> reference) {
 
         int balancingFactor = AVL.calcBF(reference);
 
@@ -92,7 +122,7 @@ public class AVL {
 
     }
 
-    private void balanceUp (Node reference, boolean printRotate) {
+    private void balanceUp (Node<T> reference, boolean printRotate) {
 
         if (reference != null) {
 
@@ -107,8 +137,8 @@ public class AVL {
 
     }
 
-    private void rotate(Node reference, Direction direction, boolean printRotate) {
-        Node childToRotate = direction.getOf(reference);
+    private void rotate(Node<T> reference, Direction direction, boolean printRotate) {
+        Node<T> childToRotate = direction.getOf(reference);
 
         if (childToRotate == null)
             return;
@@ -120,7 +150,7 @@ public class AVL {
             childToRotate = direction.getOf(reference);
 
             if (printRotate) {
-                System.out.printf("Rotação dupla a esquerda em %d realizada!\n", reference.element);
+                System.out.printf("Rotação dupla a esquerda em %s realizada!\n", reference.element);
                 doubleRotate = true;
             }
         } else if (childBf < 0 && direction == LEFT) {
@@ -128,16 +158,16 @@ public class AVL {
             childToRotate = direction.getOf(reference);
 
             if (printRotate) {
-                System.out.printf("Rotação dupla a direita em %d realizada!\n", reference.element);
+                System.out.printf("Rotação dupla a direita em %s realizada!\n", reference.element);
                 doubleRotate = true;
             }
         }
 
         Direction rotateDirection = direction == LEFT ? RIGHT : LEFT;
 
-        Node orphanSubTree = rotateDirection.getOf(childToRotate);
+        Node<T> orphanSubTree = rotateDirection.getOf(childToRotate);
 
-        Node parent = reference.parent;
+        Node<T> parent = reference.parent;
         if (childToRotate != null)
             childToRotate.parent = parent;
 
@@ -160,10 +190,10 @@ public class AVL {
         }
 
         if (printRotate && !doubleRotate)
-            System.out.printf("Rotação simples em %d realizada!\n", reference.element);
+            System.out.printf("Rotação simples em %s realizada!\n", reference.element);
     }
 
-    public void addNode (Node newNode, AddNodeOptions options) {
+    public void addNode (Node<T> newNode, AddNodeOptions options) {
 
         if (this.root == null) {
             this.root = newNode;
@@ -172,12 +202,12 @@ public class AVL {
         }
 
         if (options.printAdd()) {
-            System.out.printf("O elemento %d foi adicionado a árvore!\n", newNode.element);
+            System.out.printf("O elemento %s foi adicionado a árvore!\n", newNode.element);
         }
 
     }
 
-    public void addNode (Node newNode) {
+    public void addNode (Node<T> newNode) {
 
         if (this.root == null) {
             this.root = newNode;
@@ -187,10 +217,10 @@ public class AVL {
 
     }
 
-    private void addRecursively (Node newTerm, Node current, boolean printRotate) {
+    private void addRecursively (Node<T> newTerm, Node<T> current, boolean printRotate) {
 
-        Direction addDirection = newTerm.element < current.element ? LEFT : RIGHT;
-        Node nodeInDirection = addDirection.getOf(current);
+        Direction addDirection = newTerm.element.compareTo(current.element) <= 0? LEFT : RIGHT;
+        Node<T> nodeInDirection = addDirection.getOf(current);
 
         if (nodeInDirection == null) {
             addDirection.setOn(current, newTerm);
@@ -202,7 +232,7 @@ public class AVL {
 
     }
 
-    public void print (Node reference, RecursionOrder order) {
+    public void print (Node<T> reference, RecursionOrder order) {
 
         if (reference == null)
             return;

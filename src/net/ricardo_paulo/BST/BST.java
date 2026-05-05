@@ -1,20 +1,20 @@
 package net.ricardo_paulo.BST;
 
+import net.ricardo_paulo.Components.Node;
 import net.ricardo_paulo.Components.FindLastDirection;
 import net.ricardo_paulo.Components.RecursionOrder;
 
-
 import java.util.ArrayList;
 
-public class BST {
+public class BST<T extends Comparable<T>> {
 
-    public Node root;
+    public Node<T> root;
 
-    public BST () {
+    public BST() {
         this.root = null;
     }
 
-    public void addNode (Node newNode) {
+    public void addNode(Node<T> newNode) {
         if (root == null) {
             root = newNode;
         } else {
@@ -22,216 +22,158 @@ public class BST {
         }
     }
 
-    public void addNode (int newNodeElement) {
-        Node newNode = new Node(newNodeElement);
-
-        if (root == null) {
-            root = newNode;
-        } else {
-            addNodeRecursively(newNode, root);
-        }
+    public void addNode(T newNodeElement) {
+        Node<T> newNode = new Node<>(newNodeElement);
+        addNode(newNode);
     }
 
-    private void addNodeRecursively (Node newNode, Node current) {
-        boolean newNodeToLeft = newNode.element < current.element;
+    private void addNodeRecursively(Node<T> newNode, Node<T> current) {
+        // compareTo < 0 significa que o elemento é menor
+        boolean newNodeToLeft = newNode.element.compareTo(current.element) < 0;
 
         if (newNodeToLeft) {
             if (current.left == null) {
                 current.left = newNode;
+                newNode.parent = current; // Mantendo a referência de pai
             } else {
                 addNodeRecursively(newNode, current.left);
             }
         } else {
             if (current.right == null) {
                 current.right = newNode;
+                newNode.parent = current;
             } else {
                 addNodeRecursively(newNode, current.right);
             }
         }
-
     }
 
-    public NodeSearchResult searchNode (int target) {
+    public NodeSearchResult<T> searchNode(T target) {
         return searchRecursively(root, target, 0);
     }
 
-    private NodeSearchResult searchRecursively (Node current, int target, int level) {
+    private NodeSearchResult<T> searchRecursively(Node<T> current, T target, int level) {
+        if (current == null) return new NodeSearchResult<>();
         level += 1;
 
-        if (current.element == root.element && current.element == target)
-            return new NodeSearchResult(current, current, level);
-
-        if (current.left != null) {
-            if (current.left.element == target)
-                return new NodeSearchResult(current, current.left, level);
-
-            NodeSearchResult result = searchRecursively(current.left, target, level);
-            if (result.found)
-                return result;
+        // Comparação de igualdade usando compareTo
+        if (current.element.compareTo(target) == 0) {
+            return new NodeSearchResult<>(current.parent, current, level);
         }
 
-        if (current.right != null) {
-            if (current.right.element == target) {
-                return new NodeSearchResult(current, current.right, level);
-            }
-
-            NodeSearchResult result = searchRecursively(current.right, target, level);
-            if (result.found)
-                return result;
+        if (target.compareTo(current.element) < 0) {
+            return searchRecursively(current.left, target, level);
+        } else {
+            return searchRecursively(current.right, target, level);
         }
-
-        return new NodeSearchResult();
     }
 
-    public boolean removeNode (Node root, int target) {
-        NodeSearchResult result = searchNode(target);
+    public boolean removeNode(T target) {
+        NodeSearchResult<T> result = searchNode(target);
 
         if (result.found) {
-
-            Node substitute = null;
-            Node lastFromSubstitute;
+            Node<T> substitute = null;
+            Node<T> lastFromSubstitute;
 
             if (result.node.left != null) {
                 substitute = result.node.left;
                 lastFromSubstitute = findLast(substitute, FindLastDirection.RIGHT);
-                lastFromSubstitute.right = result.node.right;;
+                lastFromSubstitute.right = result.node.right;
+                if (result.node.right != null) result.node.right.parent = lastFromSubstitute;
             } else if (result.node.right != null) {
                 substitute = result.node.right;
                 lastFromSubstitute = findLast(substitute, FindLastDirection.LEFT);
                 lastFromSubstitute.left = result.node.left;
+                if (result.node.left != null) result.node.left.parent = lastFromSubstitute;
             }
 
-
-            if (result.node.element == root.element) {
+            if (result.node == root) {
                 this.root = substitute;
-            }
-
-            // Se o elemento a ser removido for menor que o elemento do seu pai, o substituto estará a esquerda.
-            // Caso contrário, estará a direita.
-            // Se houver um substituto ele será colocado no lugar. Caso não haja, então a referência ficará nula.
-            if (result.node.element < result.parent.element) {
-                result.parent.left = substitute;
+                if (substitute != null) substitute.parent = null;
             } else {
-                result.parent.right = substitute;
+                if (result.node.element.compareTo(result.parent.element) < 0) {
+                    result.parent.left = substitute;
+                } else {
+                    result.parent.right = substitute;
+                }
+                if (substitute != null) substitute.parent = result.parent;
             }
-
             return true;
         }
-
         return false;
     }
 
-    public Node findLast (Node current, FindLastDirection direction) {
+    public Node<T> findLast(Node<T> current, FindLastDirection direction) {
+        if (current == null) return null;
+
         if (direction == FindLastDirection.LEFT) {
-            if (current.left != null) {
-                return findLast(current.left, FindLastDirection.LEFT);
-            } else {
-                return current;
-            }
+            return (current.left != null) ? findLast(current.left, direction) : current;
         } else {
-            if (current.right != null) {
-                return findLast(current.right, FindLastDirection.RIGHT);
-            } else {
-                return current;
-            }
+            return (current.right != null) ? findLast(current.right, direction) : current;
         }
     }
 
-    // Caso sucessor seja false, o valor retornado será o predecessor.
-    // Caso contrário, será retornado o sucessor.
-    public NodeSearchResult findInOrder (int reference, boolean sucessor) {
-        NodeSearchResult refNode = searchNode(reference);
-        ArrayList<Integer> numbersList = new ArrayList<>();
+    public NodeSearchResult<T> findInOrder(T reference, boolean sucessor) {
+        NodeSearchResult<T> refNode = searchNode(reference);
+        ArrayList<T> numbersList = new ArrayList<>();
 
         if (refNode.found) {
             listInOrderRecursively(numbersList, root);
             int referenceIndex = numbersList.indexOf(reference);
-            boolean noHasSucessor = sucessor && numbersList.size() == referenceIndex + 1;
-            boolean noHasPredecessor = !sucessor && referenceIndex - 1 < 0;
 
-            if (numbersList.size() == 1)
-                return new NodeSearchResult();
+            if (numbersList.size() <= 1) return new NodeSearchResult<>();
 
-            if (noHasPredecessor || noHasSucessor) {
-                return new NodeSearchResult();
+            int targetIndex = sucessor ? referenceIndex + 1 : referenceIndex - 1;
+
+            if (targetIndex < 0 || targetIndex >= numbersList.size()) {
+                return new NodeSearchResult<>();
             }
 
-            int targetIndex;
-            if (sucessor) {
-                targetIndex = referenceIndex + 1;
-            } else {
-                targetIndex = referenceIndex - 1;
-            }
-
-            int target = numbersList.get(targetIndex);
-            return searchNode(target);
+            return searchNode(numbersList.get(targetIndex));
         }
-
-        return new NodeSearchResult();
+        return new NodeSearchResult<>();
     }
 
-    private void listInOrderRecursively(ArrayList<Integer> array, Node current) {
-        if (current == null)
-            return;
-
+    private void listInOrderRecursively(ArrayList<T> array, Node<T> current) {
+        if (current == null) return;
         listInOrderRecursively(array, current.left);
         array.add(current.element);
         listInOrderRecursively(array, current.right);
     }
 
-    // Questão 6
-    public int nodesAmount (Node current) {
-        if (current == null)
-            return 0;
-
+    public int nodesAmount(Node<T> current) {
+        if (current == null) return 0;
         return nodesAmount(current.left) + nodesAmount(current.right) + 1;
     }
 
-    public void print (RecursionOrder order, Node node) {
-        if (node == null)
-            return;
+    public void print(RecursionOrder order, Node<T> node) {
+        if (node == null) return;
 
         switch (order) {
-            case PRE_ORDER:
+            case PRE_ORDER -> {
                 System.out.println(node.element);
                 print(order, node.left);
                 print(order, node.right);
-                break;
-
-            case IN_ORDER:
+            }
+            case IN_ORDER -> {
                 print(order, node.left);
                 System.out.println(node.element);
                 print(order, node.right);
-                break;
-
-            case POST_ORDER:
+            }
+            case POST_ORDER -> {
                 print(order, node.left);
                 print(order, node.right);
                 System.out.println(node.element);
-                break;
-
+            }
         }
     }
 
-    // Questão 10
-    public boolean isBST (Node current) {
-        if (current == null)
-            return true;
+    public boolean isBST(Node<T> current) {
+        if (current == null) return true;
 
-        boolean leftIsMinor = true;
-        boolean rightIsMajor = true;
+        boolean leftOk = (current.left == null) || (current.left.element.compareTo(current.element) <= 0);
+        boolean rightOk = (current.right == null) || (current.right.element.compareTo(current.element) > 0);
 
-        if (current.left != null)
-            leftIsMinor = current.left.element <= current.element;
-
-        if (current.right != null)
-            rightIsMajor = current.right.element > current.element;
-
-        if (leftIsMinor && rightIsMajor) {
-            return isBST(current.left) && isBST(current.right);
-        }
-
-        return false;
+        return leftOk && rightOk && isBST(current.left) && isBST(current.right);
     }
-
 }

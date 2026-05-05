@@ -1,25 +1,24 @@
 package net.ricardo_paulo.Components;
 
-import net.ricardo_paulo.BST.Node;
-
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+@SuppressWarnings({"unchecked", "rawtypes"})
 public enum Direction {
     LEFT(
-            node -> node.left,
-            (ref, newNode) -> ref.left = newNode
+            node -> ((Node) node).left,
+            (ref, newNode) -> ((Node) ref).left = (Node) newNode
     ),
     RIGHT(
-            node -> node.right,
-            (ref, newNode) -> ref.right = newNode
+            node -> ((Node) node).right,
+            (ref, newNode) -> ((Node) ref).right = (Node) newNode
     ),
     BALANCED();
 
-    private final Function<Node, Node> extractor;
-    private final BiConsumer<Node, Node> updater;
+    private final Function extractor;
+    private final BiConsumer updater;
 
-    Direction(Function<Node, Node> extractor, BiConsumer<Node, Node> updater) {
+    Direction(Function extractor, BiConsumer updater) {
         this.extractor = extractor;
         this.updater = updater;
     }
@@ -29,19 +28,33 @@ public enum Direction {
         this.updater = null;
     }
 
-    public Node getOf (Node node) {
-        if (this.extractor == null)
+    public <T extends Comparable<T>> Node<T> getOf (Node<T> node) {
+        if (this.extractor == null || node == null)
             return null;
 
-        return extractor.apply(node);
+        return (Node<T>) extractor.apply(node);
     }
 
-    public void setOn (Node reference, Node newNode) {
+    public <T extends Comparable<T>> void setOn (Node<T> reference, Node<T> newNode) {
 
-        if (this.updater == null)
+        if (this.updater == null || reference == null)
             return;
 
         updater.accept(reference, newNode);
+
+    }
+
+    public <T extends Comparable<T>> Node<T> getLastOf (Node<T> reference) {
+
+        if (this.extractor == null || reference == null)
+            return null;
+
+        Node<T> nextNode = (Node<T>) extractor.apply(reference);
+
+        if (nextNode == null)
+            return reference;
+
+        return getLastOf(nextNode);
 
     }
 

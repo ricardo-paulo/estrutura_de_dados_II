@@ -1,13 +1,15 @@
 package net.ricardo_paulo.BST;
 
-public class NodeSearchResult {
+import net.ricardo_paulo.Components.Node;
 
-    public Node parent;
-    public Node node;
+public class NodeSearchResult<T extends Comparable<T>> {
+
+    public Node<T> parent;
+    public Node<T> node;
     public boolean found;
     public int level;
 
-    public NodeSearchResult(Node parent, Node node, int level) {
+    public NodeSearchResult(Node<T> parent, Node<T> node, int level) {
         this.parent = parent;
         this.node = node;
         this.level = level;
