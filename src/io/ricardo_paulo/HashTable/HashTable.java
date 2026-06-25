@@ -20,10 +20,6 @@ public class HashTable {
         this.capacity = words.length;
         this.table = new Node[capacity];
 
-        System.out.println(words.length);
-        System.out.println(pos.length);
-        System.out.println(definitions.length);
-
         for (int w = 0; w < capacity; w++) {
 
             this.insert(words[w], pos[w], definitions[w]);
