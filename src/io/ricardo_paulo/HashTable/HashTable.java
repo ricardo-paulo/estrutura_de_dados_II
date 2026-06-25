@@ -1,5 +1,8 @@
 package io.ricardo_paulo.HashTable;
 
+import io.ricardo_paulo.HashTable.DictionaryLists.Data;
+import io.ricardo_paulo.HashTable.DictionaryLists.DictionaryLists;
+
 public class HashTable {
 
     // Atributos da Tabela Hash
@@ -7,9 +10,26 @@ public class HashTable {
     private int capacity;
 
     // Construtor
-    public HashTable(int capacity) {
-        this.capacity = capacity;
-        this.table = new Node[capacity]; // Inicializa o array com posições vazias (null)
+    public HashTable() {
+
+        DictionaryLists rawLists = new Data().getDictionary();
+        String[] words = rawLists.getWords();
+        String[] pos = rawLists.getPos();
+        String[] definitions = rawLists.getDefinitions();
+
+        this.capacity = words.length;
+        this.table = new Node[capacity];
+
+        System.out.println(words.length);
+        System.out.println(pos.length);
+        System.out.println(definitions.length);
+
+        for (int w = 0; w < capacity; w++) {
+
+            this.insert(words[w], pos[w], definitions[w]);
+
+        }
+
     }
 
     // 2. A Função Hash (Função de Dispersão)
@@ -20,13 +40,13 @@ public class HashTable {
     }
 
     // 3. Operação de Inserção (Put)
-    public void insert(String key, String value) {
+    public void insert(String key, String pos, String definition) {
         int index = hashFunc(key);
         Node currentNode = table[index];
 
         // Caso 1: A posição está vazia (Sem colisão)
         if (currentNode == null) {
-            table[index] = new Node(key, value);
+            table[index] = new Node(key, pos, definition);
             return;
         }
 
@@ -35,7 +55,8 @@ public class HashTable {
         while (currentNode != null) {
             // Se a chave já existir, atualiza o valor (evita duplicatas)
             if (currentNode.key.equals(key)) {
-                currentNode.value = value;
+                currentNode.pos = pos;
+                currentNode.definition = definition;
                 return;
             }
             // Se chegou ao último nó, para a execução
@@ -46,18 +67,18 @@ public class HashTable {
         }
 
         // Insere o novo nó no final da lista encadeada existente
-        currentNode.next = new Node(key, value);
+        currentNode.next = new Node(key, pos, definition);
     }
 
     // 4. Operação de Busca (Get)
-    public String search(String key) {
+    public Node search(String key) {
         int index = hashFunc(key);
         Node currentNode = table[index];
 
         // Percorre a lista encadeada no índice gerado
         while (currentNode != null) {
             if (currentNode.key.equals(key)) {
-                return currentNode.value; // Encontrou!
+                return currentNode; // Encontrou!
             }
             currentNode = currentNode.next;
         }
@@ -99,7 +120,8 @@ public class HashTable {
                 System.out.print("NULL");
             } else {
                 while (currentNode != null) {
-                    System.out.print("{" + currentNode.key + " => " + currentNode.value + "}");
+                    // System.out.print("{" + currentNode.key + " => " + currentNode.value + "}");
+                    System.out.printf("{ %s => %s, %s }", currentNode.key, currentNode.pos, currentNode.definition);
                     if (currentNode.next != null) {
                         System.out.print(" -> ");
                     }

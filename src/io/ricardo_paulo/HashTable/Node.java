@@ -1,13 +1,15 @@
 package io.ricardo_paulo.HashTable;
 
-class Node {
+public class Node {
     String key;
-    String value;
+    String pos;
+    String definition;
     Node next;
 
-    public Node(String key, String value) {
+    public Node(String key, String pos, String definition) {
         this.key = key;
-        this.value = value;
+        this.pos = pos;
+        this.definition = definition;
         this.next = null;
     }
 }

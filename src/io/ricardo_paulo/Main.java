@@ -7,31 +7,31 @@ public class Main {
     public static void main (String[] args) {
 
         // Criamos uma tabela pequena (tamanho 4) para forçar colisões propositalmente
-        HashTable minhaTabela = new HashTable(4);
+        HashTable minhaTabela = new HashTable();
 
         System.out.println("Inserindo dados...");
 
-        minhaTabela.insert("Ana", "Engenheira");
-
-        minhaTabela.insert("Carlos", "Professor");
-
-        minhaTabela.insert("Beatriz", "Designer");
-        minhaTabela.insert("Daniel", "Desenvolvedor");
-        minhaTabela.insert("Eduarda", "Médica");
-        minhaTabela.insert("Walisson", "Professor");
-        minhaTabela.insert("Pedro Paulo", "Médico");
+        // minhaTabela.insert("Ana", "Engenheira");
+        //
+        // minhaTabela.insert("Carlos", "Professor");
+        //
+        // minhaTabela.insert("Beatriz", "Designer");
+        // minhaTabela.insert("Daniel", "Desenvolvedor");
+        // minhaTabela.insert("Eduarda", "Médica");
+        // minhaTabela.insert("Walisson", "Professor");
+        // minhaTabela.insert("Pedro Paulo", "Médico");
 
         // Mostra a estrutura com as colisões resolvidas por setas (->)
-        minhaTabela.printTable();
+        // minhaTabela.printTable();
 
         // Testando a busca
-        System.out.println("Buscando 'Beatriz': " + minhaTabela.search("Beatriz"));
-        System.out.println("Buscando 'Eduarda': " + minhaTabela.search("Eduarda"));
-        System.out.println("Buscando 'Inexistente': " + minhaTabela.search("Lucas"));
+        // System.out.println("Buscando 'Beatriz': " + minhaTabela.search("Beatriz"));
+        // System.out.println("Buscando 'Eduarda': " + minhaTabela.search("Eduarda"));
+        // System.out.println("Buscando 'Inexistente': " + minhaTabela.search("Lucas"));
 
         // Testando a remoção
-        System.out.println("\nRemovendo 'Carlos'...");
-        minhaTabela.remove("Carlos");
+        // System.out.println("\nRemovendo 'Carlos'...");
+        // minhaTabela.remove("Carlos");
 
         // Mostra a tabela após a remoção
         minhaTabela.printTable();
