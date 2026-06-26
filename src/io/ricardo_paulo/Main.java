@@ -6,8 +6,7 @@ public class Main {
 
     public static void main (String[] args) {
 
-        // Criamos uma tabela pequena (tamanho 4) para forçar colisões propositalmente
-        HashTable minhaTabela = new HashTable();
+        HashTable dictionary = new HashTable();
 
         System.out.println("Inserindo dados...");
 
@@ -34,7 +33,7 @@ public class Main {
         // minhaTabela.remove("Carlos");
 
         // Mostra a tabela após a remoção
-        minhaTabela.printTable();
+        dictionary.printTable();
 
     }
 }
