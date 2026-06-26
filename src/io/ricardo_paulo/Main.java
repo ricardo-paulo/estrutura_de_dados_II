@@ -6,9 +6,10 @@ public class Main {
 
     public static void main (String[] args) {
 
-        HashTable dictionary = new HashTable();
-
         System.out.println("Inserindo dados...");
+        HashTable dictionary = new HashTable();
+        // dictionary.printTable();
+        // System.out.println(dictionary.getSize());
 
         // minhaTabela.insert("Ana", "Engenheira");
         //
@@ -33,7 +34,7 @@ public class Main {
         // minhaTabela.remove("Carlos");
 
         // Mostra a tabela após a remoção
-        dictionary.printTable();
+        // dictionary.printTable();
 
     }
 }

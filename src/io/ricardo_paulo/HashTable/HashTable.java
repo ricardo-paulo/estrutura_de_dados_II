@@ -6,13 +6,13 @@ import io.ricardo_paulo.HashTable.DictionaryLists.DictionaryLists;
 public class HashTable {
 
     // Atributos da Tabela Hash
-    private Node[] table;
-    private int capacity;
+    private final Node[] table;
+    private final int capacity;
 
     // Construtor
     public HashTable() {
 
-        DictionaryLists rawLists = new Data().getDictionary();
+        DictionaryLists rawLists = new Data().getDictionary(100);
         String[] words = rawLists.getWords();
         String[] pos = rawLists.getPos();
         String[] definitions = rawLists.getDefinitions();
@@ -20,7 +20,29 @@ public class HashTable {
         this.capacity = words.length;
         this.table = new Node[capacity];
 
-        for (int w = 0; w < capacity; w++) {
+        for (int w = 0; w < capacity - 1; w++) {
+
+            this.insert(words[w], pos[w], definitions[w]);
+
+        }
+
+    }
+
+    public HashTable(int percent) {
+
+        if (percent <= 0 || percent > 100) {
+            System.out.println("O percentual de carregamento dos dados passado é inválido. Ele deve ser: 0 < p ≤ 100");
+        }
+
+        DictionaryLists rawLists = new Data().getDictionary(percent);
+        String[] words = rawLists.getWords();
+        String[] pos = rawLists.getPos();
+        String[] definitions = rawLists.getDefinitions();
+
+        this.capacity = words.length;
+        this.table = new Node[capacity];
+
+        for (int w = 0; w < capacity - 1; w++) {
 
             this.insert(words[w], pos[w], definitions[w]);
 
@@ -102,6 +124,10 @@ public class HashTable {
             currentNode = currentNode.next;
         }
         return false; // Chave não encontrada
+    }
+
+    public int getSize() {
+        return capacity;
     }
 
     // Método auxiliar para exibir a tabela na aula

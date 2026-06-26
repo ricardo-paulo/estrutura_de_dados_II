@@ -5,13 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Data {
 
-    public DictionaryLists getDictionary () {
+    public DictionaryLists getDictionary (int percent) {
 
         String filePath = "/englishDictionary.json";
-        String line;
         DictionaryLists result = new DictionaryLists();
 
         InputStream inputStream = Data.class.getResourceAsStream(filePath);
@@ -23,42 +24,52 @@ public class Data {
 
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
-            while ((line = bufferedReader.readLine()) != null) {
+            List<String> lines = bufferedReader.lines().toList();
+            long itemsCount = lines.stream()
+                    .filter(l -> l.contains("\"word\":"))
+                    .count();
+            int rangeIndex = Math.toIntExact(itemsCount * percent / 100);
+            AtomicInteger counter = new AtomicInteger(0);
 
-                if (line.contains("\"word\":")) {
-                    String word = line
-                            .replace("\"word\":", "")
-                            .replace("\"", "")
-                            .trim();
+            lines.forEach(line -> {
 
-                    if (word.endsWith(","))
-                        word = word.substring(0, word.length() - 1);
+                if (counter.get() <= rangeIndex) {
+                    if (line.contains("\"word\":")) {
+                        String word = line
+                                .replace("\"word\":", "")
+                                .replace("\"", "")
+                                .trim();
 
-                    result.addWord(word);
+                        if (word.endsWith(",")) {
+                            word = word.substring(0, word.length() - 1);
+                        }
 
-                } else if (line.contains("\"definition\":")) {
-                    String definition = line
-                            .replace("\"definition\":", "")
-                            .replace("\"", "")
-                            .trim();
+                        counter.getAndIncrement();
+                        result.addWord(word);
 
-                    result.addDefinition(definition);
+                    } else if (line.contains("\"definition\":")) {
+                        String definition = line
+                                .replace("\"definition\":", "")
+                                .replace("\"", "")
+                                .trim();
 
-                } else if (line.contains("\"pos\":")) {
-                    String pos = line
-                            .replace("\"pos\":", "")
-                            .replace("\"", "")
-                            .trim();
+                        result.addDefinition(definition);
 
-                    if (pos.endsWith(",")) {
-                        pos = pos.substring(0, pos.length() - 1);
+                    } else if (line.contains("\"pos\":")) {
+                        String pos = line
+                                .replace("\"pos\":", "")
+                                .replace("\"", "")
+                                .trim();
+
+                        if (pos.endsWith(",")) {
+                            pos = pos.substring(0, pos.length() - 1);
+                        }
+
+                        result.addPos(pos);
+
                     }
-
-                    result.addPos(pos);
-
                 }
-
-            }
+            });
 
         } catch (IOException e) {
             System.out.println(e.getMessage());
