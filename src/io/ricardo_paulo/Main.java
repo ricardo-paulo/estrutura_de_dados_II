@@ -1,6 +1,7 @@
 package io.ricardo_paulo;
 
 import io.ricardo_paulo.HashTable.HashTable;
+import java.util.function.Supplier;
 
 public class Main {
 
@@ -8,6 +9,8 @@ public class Main {
 
         System.out.println("Inserindo dados...");
         HashTable dictionary = new HashTable();
+        System.out.println(showExecTime(() -> dictionary.search("Control")));
+
         // dictionary.printTable();
         // System.out.println(dictionary.getSize());
 
@@ -37,4 +40,16 @@ public class Main {
         // dictionary.printTable();
 
     }
+
+    private static <T> T showExecTime(Supplier<T> op) {
+        long start = System.nanoTime();
+        T result = op.get();
+        long finish = System.nanoTime();
+
+        System.out.printf("Tempo de execução: %d ns\n", finish - start);
+
+        return result;
+
+    }
+
 }

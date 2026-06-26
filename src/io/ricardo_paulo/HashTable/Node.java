@@ -12,4 +12,9 @@ public class Node {
         this.definition = definition;
         this.next = null;
     }
+
+    @Override
+    public String toString() {
+        return "{%s, %s, %s}".formatted(key, pos, definition);
+    }
 }
