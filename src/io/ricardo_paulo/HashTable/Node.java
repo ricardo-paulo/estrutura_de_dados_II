@@ -1,10 +1,10 @@
 package io.ricardo_paulo.HashTable;
 
 public class Node {
-    String key;
-    String pos;
-    String definition;
-    Node next;
+    public String key;
+    public String pos;
+    public String definition;
+    public Node next;
 
     public Node(String key, String pos, String definition) {
         this.key = key;

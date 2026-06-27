@@ -2,11 +2,12 @@ package io.ricardo_paulo.HashTable;
 
 import io.ricardo_paulo.HashTable.data.Data;
 import io.ricardo_paulo.HashTable.data.DictionaryLists;
+import io.ricardo_paulo.HashTable.enums.CollisionResolver;
 import io.ricardo_paulo.HashTable.enums.HashFunc;
 
 public class HashTable {
 
-    private Node[] table;
+    public Node[] table;
     private int capacity;
     private final HashFunc hashFunc;
     private int size = 0;
@@ -31,7 +32,7 @@ public class HashTable {
         this.capacity = words.length;
         this.table = new Node[this.capacity];
 
-        for (int w = 0; w < this.capacity; w++) {
+        for (int w = 0; w < words.length; w++) {
 
             this.insert(words[w], pos[w], definitions[w]);
 
@@ -67,33 +68,19 @@ public class HashTable {
     public void insert(String key, String pos, String definition) {
         int index = hashFunc.hash(key, capacity);
         Node currentNode = table[index];
+        Node newNode = new Node(key, pos, definition);
+        boolean addedNode;
 
         // Caso 1: A posição está vazia (Sem colisão)
         if (currentNode == null) {
             table[index] = new Node(key, pos, definition);
+            addedNode = true;
+        } else {
+            addedNode = CollisionResolver.SEPARATED_CHAINING.resolve(this, currentNode, index, newNode);
+        }
+
+        if (addedNode)
             size++;
-            return;
-        }
-
-        // Caso 2: Há elementos na posição (Colisão!)
-        // Vamos percorrer a lista encadeada naquela posição
-        while (currentNode != null) {
-            // Se a chave já existir, atualiza o valor (evita duplicatas)
-            if (currentNode.key.equals(key)) {
-                currentNode.pos = pos;
-                currentNode.definition = definition;
-                return;
-            }
-            // Se chegou ao último nó, para a execução
-            if (currentNode.next == null) {
-                break;
-            }
-            currentNode = currentNode.next;
-        }
-
-        // Insere o novo nó no final da lista encadeada existente
-        currentNode.next = new Node(key, pos, definition);
-        size++;
 
         if (getLoadFactor() >= 0.75)
             rehash();
