@@ -15,16 +15,6 @@ Não é permitido o uso de bibliotecas ou quaisquer outras estruturas de dados p
 - Lidia Cruz de Araújo
 - Paulo Ricardo Rodrigues Silva
 
-# Modo de Utilização
-
-## Pacote JAR
-
-Para utilizar o pacote JAR, basta baixar a versão mais recente e executar o seguinte comando no terminal, no mesmo diretório do arquivo *.jar*:
-
-```bash
-java -jar *nome_do_pacote*.jar
-```
-
 # Definições
 
 ## Fonte de dados
@@ -62,12 +52,13 @@ O arquivo foi convertido no formato JSON, para maior praticidade na leitura do a
 - [x]  Implementar um método para rehashing.
     - [x]  Criar forma de ser identificada a necessidade de rehashing quando for inserido um novo elemento.
     - [x]  Criar método que redimensiona a tabela, redistribui (reinsere) os elementos nessa tabela nova e substitui a tabela antiga pela tabela nova (com o dobro do tamanho da antiga).
-- [ ]  Implementar resolução de colisões.
+    - [x]  Adaptar o rehashing para fazer a redistribuição em endereçamento aberto.
+- [x]  Implementar resolução de colisões.
     - [x]  Encadeamento Separado (listas encadeadas); e
-    - [ ]  Endereçamento Aberto (por sondagem linear ou sondagem quadrática).
+    - [x]  Endereçamento Aberto (por sondagem linear ou sondagem quadrática).
 - [x]  Calcular fator de carga e exibir no terminal.
 - [x]  Obter o tempo de busca e de inserção da tabela hash quando ela estiver 50% e 90% cheia. Ou seja quando estiver com metade dos dados carregados e quando estiver com 90% dos dados carregados.
-- [ ]  Criar método para retorno de quantas colisões ocorreram. Incluir contador logo no método de inserção e armazenar a contagem em uma variável privada da classe.
+- [x]  Criar método para retorno de quantas colisões ocorreram. Incluir contador logo no método de inserção e armazenar a contagem em uma variável privada da classe.
 
 ## Análise
 
