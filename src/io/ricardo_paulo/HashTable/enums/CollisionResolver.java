@@ -30,7 +30,7 @@ public enum CollisionResolver {
     }),
     OPEN_ADDRESSING((hashTable,currentNode, index, newNode) -> {
 
-        int currentIndex = index + 1;
+        int currentIndex = index;
         currentNode = hashTable.table[currentIndex];
 
         while (currentNode != null) {

@@ -76,7 +76,7 @@ public class HashTable {
             table[index] = new Node(key, pos, definition);
             addedNode = true;
         } else {
-            addedNode = CollisionResolver.SEPARATED_CHAINING.resolve(this, currentNode, index, newNode);
+            addedNode = CollisionResolver.OPEN_ADDRESSING.resolve(this, currentNode, index, newNode);
         }
 
         if (addedNode)
