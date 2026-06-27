@@ -1,4 +1,4 @@
-package io.ricardo_paulo.HashTable.DictionaryLists;
+package io.ricardo_paulo.HashTable.data;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Data {
@@ -30,10 +31,19 @@ public class Data {
                     .count();
             int rangeIndex = Math.toIntExact(itemsCount * percent / 100);
             AtomicInteger counter = new AtomicInteger(0);
+            AtomicBoolean withinRange = new AtomicBoolean(true);
 
             lines.forEach(line -> {
 
-                if (counter.get() <= rangeIndex) {
+                if (line.contains("\"word\":")) {
+                    if (counter.get() >= rangeIndex) {
+                        withinRange.set(false);
+                    } else {
+                        counter.getAndIncrement();
+                    }
+                }
+
+                if (withinRange.get()) {
                     if (line.contains("\"word\":")) {
                         String word = line
                                 .replace("\"word\":", "")
@@ -44,7 +54,6 @@ public class Data {
                             word = word.substring(0, word.length() - 1);
                         }
 
-                        counter.getAndIncrement();
                         result.addWord(word);
 
                     } else if (line.contains("\"definition\":")) {
