@@ -78,6 +78,8 @@ public class Data {
 
                     }
                 }
+
+                result.setCapacity((int) itemsCount);
             });
 
         } catch (IOException e) {

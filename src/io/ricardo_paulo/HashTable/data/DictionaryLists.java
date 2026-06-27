@@ -7,6 +7,7 @@ public class DictionaryLists {
     private final ArrayList<String> words = new ArrayList<>();
     private final ArrayList<String> pos = new ArrayList<>();
     private final ArrayList<String> definitions = new ArrayList<>();
+    private int capacity = 0;
 
     public String[] getWords() {
         return words.toArray(new String[0]);
@@ -31,4 +32,10 @@ public class DictionaryLists {
     public void addDefinition(String definition) {
         this.definitions.add(definition);
     }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public int getCapacity() { return this.capacity; }
 }

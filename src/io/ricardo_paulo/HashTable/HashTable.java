@@ -9,6 +9,7 @@ public class HashTable {
     private final Node[] table;
     private final int capacity;
     private final HashFunc hashFunc;
+    private int size = 0;
 
     public HashTable(HashFunc hashFunc) {
 
@@ -41,10 +42,10 @@ public class HashTable {
         String[] pos = rawLists.getPos();
         String[] definitions = rawLists.getDefinitions();
 
-        this.capacity = words.length;
+        this.capacity = rawLists.getCapacity();
         this.table = new Node[capacity];
 
-        for (int w = 0; w < capacity; w++) {
+        for (int w = 0; w < words.length; w++) {
 
             this.insert(words[w], pos[w], definitions[w]);
 
@@ -60,6 +61,7 @@ public class HashTable {
         // Caso 1: A posição está vazia (Sem colisão)
         if (currentNode == null) {
             table[index] = new Node(key, pos, definition);
+            size++;
             return;
         }
 
@@ -81,6 +83,7 @@ public class HashTable {
 
         // Insere o novo nó no final da lista encadeada existente
         currentNode.next = new Node(key, pos, definition);
+        size++;
     }
 
     // 4. Operação de Busca (Get)
@@ -113,16 +116,26 @@ public class HashTable {
                     // Se estiver no meio ou fim, "pula" o nó atual
                     previousNode.next = currentNode.next;
                 }
+                size--;
                 return true; // Removido com sucesso
             }
             previousNode = currentNode;
             currentNode = currentNode.next;
         }
+
         return false; // Chave não encontrada
     }
 
     public int getCapacity() {
         return capacity;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public double getLoadFactor() {
+        return (double) size/capacity;
     }
 
     // Método auxiliar para exibir a tabela na aula
