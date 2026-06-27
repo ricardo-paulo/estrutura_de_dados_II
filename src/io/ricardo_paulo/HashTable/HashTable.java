@@ -4,6 +4,10 @@ import io.ricardo_paulo.HashTable.data.Data;
 import io.ricardo_paulo.HashTable.data.DictionaryLists;
 import io.ricardo_paulo.HashTable.enums.CollisionResolver;
 import io.ricardo_paulo.HashTable.enums.HashFunc;
+import io.ricardo_paulo.HashTable.utils.ElementsDistribution;
+
+import java.util.Arrays;
+import java.util.Objects;
 
 public class HashTable {
 
@@ -177,6 +181,16 @@ public class HashTable {
 
     public int getReadPercentage() {
         return readPercentage;
+    }
+
+    public ElementsDistribution getElementsDistribution() {
+
+        int totalPos = table.length;
+        int nullPos = (int) Arrays.stream(table)
+                .filter(Objects::isNull)
+                .count();
+
+        return new ElementsDistribution(nullPos, totalPos - nullPos);
     }
 
     // Método auxiliar para exibir a tabela na aula

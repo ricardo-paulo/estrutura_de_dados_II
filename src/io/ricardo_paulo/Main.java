@@ -75,12 +75,21 @@ public class Main {
         reHashing.rehash();
         System.out.println("Fator de carga após redimensionamento: " + reHashing.getLoadFactor());
 
+        System.out.println();
+
         System.out.println("============= TESTE DE COLISÕES =============");
         HashTable colMulti = new HashTable(HashFunc.MULTIPLICATION, CollisionResolver.SEPARATED_CHAINING);
         HashTable colDjb2 = new HashTable(HashFunc.DJB2, CollisionResolver.SEPARATED_CHAINING);
 
         System.out.println("Colisões com o Método de Multiplicação: " + colMulti.getCollisionsCount());
-        System.out.println("Colisões com o Algorítmo DJB2: " + colDjb2.getCollisionsCount());
+        System.out.println("Colisões com o Algoritmo DJB2: " + colDjb2.getCollisionsCount());
+
+        System.out.println();
+
+        System.out.println("Posições vazias (Método da Multiplicação): " + colMulti.getElementsDistribution().nullPositions);
+        System.out.println("Posições preenchidas (Método da Multiplicação): " + colMulti.getElementsDistribution().filledPositions);
+        System.out.println("Posições vazias (DJB2): " + colDjb2.getElementsDistribution().nullPositions);
+        System.out.println("Posições preenchidas (DJB2): " + colDjb2.getElementsDistribution().filledPositions);
 
     }
 
