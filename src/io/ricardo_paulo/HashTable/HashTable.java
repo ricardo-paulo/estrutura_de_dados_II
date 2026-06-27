@@ -10,18 +10,21 @@ public class HashTable {
     public Node[] table;
     private int capacity;
     private final HashFunc hashFunc;
+    private final CollisionResolver collisionResolver;
+    private int collisionsCount = 0;
     private int size = 0;
     private int readPercentage = 100;
 
-    public HashTable(int capacity, HashFunc hashFunc) {
+    public HashTable(int capacity, HashFunc hashFunc, CollisionResolver collisionResolver) {
 
         this.capacity = capacity;
         this.hashFunc = hashFunc;
+        this.collisionResolver = collisionResolver;
         this.table = new Node[this.capacity];
         this.readPercentage = 0;
     }
 
-    public HashTable(HashFunc hashFunc) {
+    public HashTable(HashFunc hashFunc, CollisionResolver collisionResolver) {
 
         DictionaryLists rawLists = new Data().getDictionary(100);
         String[] words = rawLists.getWords();
@@ -29,6 +32,7 @@ public class HashTable {
         String[] definitions = rawLists.getDefinitions();
 
         this.hashFunc = hashFunc;
+        this.collisionResolver = collisionResolver;
         this.capacity = words.length;
         this.table = new Node[this.capacity];
 
@@ -40,7 +44,7 @@ public class HashTable {
 
     }
 
-    public HashTable(HashFunc hashFunc, int percent) {
+    public HashTable(HashFunc hashFunc, CollisionResolver collisionResolver, int percent) {
 
         if (percent <= 0 || percent > 100) {
             System.out.println("O percentual de carregamento dos dados passado é inválido. Ele deve ser: 0 < p ≤ 100");
@@ -48,6 +52,7 @@ public class HashTable {
 
         this.readPercentage = percent;
         this.hashFunc = hashFunc;
+        this.collisionResolver = collisionResolver;
         DictionaryLists rawLists = new Data().getDictionary(percent);
         String[] words = rawLists.getWords();
         String[] pos = rawLists.getPos();
@@ -71,12 +76,13 @@ public class HashTable {
         Node newNode = new Node(key, pos, definition);
         boolean addedNode;
 
-        // Caso 1: A posição está vazia (Sem colisão)
+        // Caso 1: A posição está vazia (Sem colisão).
         if (currentNode == null) {
             table[index] = new Node(key, pos, definition);
             addedNode = true;
-        } else {
-            addedNode = CollisionResolver.OPEN_ADDRESSING.resolve(this, currentNode, index, newNode);
+        } else { // Caso 2: A posição está preenchida (Colisão).
+            addedNode = collisionResolver.resolve(this, currentNode, index, newNode);
+            collisionsCount++;
         }
 
         if (addedNode)
@@ -141,7 +147,8 @@ public class HashTable {
 
     public void rehash() {
         int newCapacity = this.capacity * 2;
-        HashTable newHashTable = new HashTable(newCapacity, this.hashFunc);
+        HashTable newHashTable = new HashTable(newCapacity, this.hashFunc, this.collisionResolver);
+        collisionsCount = 0;
 
         for (Node n : this.table) {
             if (n != null) {
@@ -162,6 +169,14 @@ public class HashTable {
         insertRecursively(newHashTable, current.next);
         newHashTable.insert(current.key, current.pos, current.definition);
 
+    }
+
+    public int getCollisionsCount() {
+        return collisionsCount;
+    }
+
+    public int getReadPercentage() {
+        return readPercentage;
     }
 
     // Método auxiliar para exibir a tabela na aula
