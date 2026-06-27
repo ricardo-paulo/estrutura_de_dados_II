@@ -15,10 +15,6 @@ Não é permitido o uso de bibliotecas ou quaisquer outras estruturas de dados p
 - Lidia Cruz de Araújo
 - Paulo Ricardo Rodrigues Silva
 
-# Arquitetura
-
-…
-
 # Modo de Utilização
 
 ## Pacote JAR
@@ -31,9 +27,9 @@ java -jar *nome_do_pacote*.jar
 
 # Definições
 
-## Fontes de dados
+## Fonte de dados
 
-A única fonte de dados se dá através do arquivo .csv encaminhado. Que é essencialmente um dicionário de inglês com três colunas: palavra, função e definição.
+A única fonte de dados se dá através do arquivo CSV encaminhado. Que é essencialmente um dicionário de inglês com três colunas: palavra, função e definição.
 
 O arquivo foi convertido no formato JSON, para maior praticidade na leitura do arquivo via código.
 
@@ -58,15 +54,19 @@ O arquivo foi convertido no formato JSON, para maior praticidade na leitura do a
 - [x]  Tradução do código base.
 - [x]  Leitura da Base de Dados.
 - [x]  Fazer o código base utilizar os dados reais para gerar as HashTables.
-- [ ]  Criar método para carregar determinado percentual, passado por parâmetro, dos dados e retorná-los.
-- [ ]  Implementar as duas funções hashing de modo separado. (Ex. cada método é um método separado dentro do código).
-    - [ ]  Método da Multiplicação.
-    - [ ]  Algoritmo DJB2.
+- [x]  Criar método para carregar determinado percentual, passado por parâmetro, dos dados e retorná-los.
+- [x]  Criar método para obter o tempo de execução de uma operação (busca, inserção e deleção) da tabela.
+- [x]  Implementar as duas funções hashing de modo separado. (Ex. cada método é um método separado dentro do código).
+    - [x]  Método da Multiplicação.
+    - [x]  Algoritmo DJB2.
+- [ ]  Implementar um método para rehashing.
+    - [ ]  Criar forma de ser identificada a necessidade de rehashing quando for inserido um novo elemento.
+    - [ ]  Criar método que redimensiona a tabela, redistribui (reinsere) os elementos nessa tabela nova e substitui a tabela antiga pela tabela nova (com o dobro do tamanho da antiga).
 - [ ]  Implementar resolução de colisões.
-    - [ ]  Encadeamento Separado (listas encadeadas); e
+    - [x]  Encadeamento Separado (listas encadeadas); e
     - [ ]  Endereçamento Aberto (por sondagem linear ou sondagem quadrática).
-- [ ]  Calcular fator de carga e exibir no terminal.
-    - [ ]  Obter o tempo de busca e de inserção da tabela hash quando ela estiver 50% e 90% cheia. Ou seja quando estiver com metade dos dados carregados e quando estiver com 90% dos dados carregados.
+- [x]  Calcular fator de carga e exibir no terminal.
+- [x]  Obter o tempo de busca e de inserção da tabela hash quando ela estiver 50% e 90% cheia. Ou seja quando estiver com metade dos dados carregados e quando estiver com 90% dos dados carregados.
 - [ ]  Criar método para retorno de quantas colisões ocorreram. Incluir contador logo no método de inserção e armazenar a contagem em uma variável privada da classe.
 
 ## Análise
