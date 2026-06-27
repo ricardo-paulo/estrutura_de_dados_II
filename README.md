@@ -59,9 +59,9 @@ O arquivo foi convertido no formato JSON, para maior praticidade na leitura do a
 - [x]  Implementar as duas funções hashing de modo separado. (Ex. cada método é um método separado dentro do código).
     - [x]  Método da Multiplicação.
     - [x]  Algoritmo DJB2.
-- [ ]  Implementar um método para rehashing.
-    - [ ]  Criar forma de ser identificada a necessidade de rehashing quando for inserido um novo elemento.
-    - [ ]  Criar método que redimensiona a tabela, redistribui (reinsere) os elementos nessa tabela nova e substitui a tabela antiga pela tabela nova (com o dobro do tamanho da antiga).
+- [x]  Implementar um método para rehashing.
+    - [x]  Criar forma de ser identificada a necessidade de rehashing quando for inserido um novo elemento.
+    - [x]  Criar método que redimensiona a tabela, redistribui (reinsere) os elementos nessa tabela nova e substitui a tabela antiga pela tabela nova (com o dobro do tamanho da antiga).
 - [ ]  Implementar resolução de colisões.
     - [x]  Encadeamento Separado (listas encadeadas); e
     - [ ]  Endereçamento Aberto (por sondagem linear ou sondagem quadrática).
