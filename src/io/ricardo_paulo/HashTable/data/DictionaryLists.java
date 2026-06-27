@@ -1,4 +1,4 @@
-package io.ricardo_paulo.HashTable.DictionaryLists;
+package io.ricardo_paulo.HashTable.data;
 
 import java.util.ArrayList;
 

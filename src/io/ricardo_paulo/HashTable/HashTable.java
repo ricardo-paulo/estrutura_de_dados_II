@@ -1,26 +1,27 @@
 package io.ricardo_paulo.HashTable;
 
-import io.ricardo_paulo.HashTable.DictionaryLists.Data;
-import io.ricardo_paulo.HashTable.DictionaryLists.DictionaryLists;
+import io.ricardo_paulo.HashTable.data.Data;
+import io.ricardo_paulo.HashTable.data.DictionaryLists;
+import io.ricardo_paulo.HashTable.enums.HashFunc;
 
 public class HashTable {
 
-    // Atributos da Tabela Hash
     private final Node[] table;
     private final int capacity;
+    private final HashFunc hashFunc;
 
-    // Construtor
-    public HashTable() {
+    public HashTable(HashFunc hashFunc) {
 
         DictionaryLists rawLists = new Data().getDictionary(100);
         String[] words = rawLists.getWords();
         String[] pos = rawLists.getPos();
         String[] definitions = rawLists.getDefinitions();
 
+        this.hashFunc = hashFunc;
         this.capacity = words.length;
         this.table = new Node[capacity];
 
-        for (int w = 0; w < capacity - 1; w++) {
+        for (int w = 0; w < capacity; w++) {
 
             this.insert(words[w], pos[w], definitions[w]);
 
@@ -28,12 +29,13 @@ public class HashTable {
 
     }
 
-    public HashTable(int percent) {
+    public HashTable(HashFunc hashFunc, int percent) {
 
         if (percent <= 0 || percent > 100) {
             System.out.println("O percentual de carregamento dos dados passado é inválido. Ele deve ser: 0 < p ≤ 100");
         }
 
+        this.hashFunc = hashFunc;
         DictionaryLists rawLists = new Data().getDictionary(percent);
         String[] words = rawLists.getWords();
         String[] pos = rawLists.getPos();
@@ -42,7 +44,7 @@ public class HashTable {
         this.capacity = words.length;
         this.table = new Node[capacity];
 
-        for (int w = 0; w < capacity - 1; w++) {
+        for (int w = 0; w < capacity; w++) {
 
             this.insert(words[w], pos[w], definitions[w]);
 
@@ -50,16 +52,9 @@ public class HashTable {
 
     }
 
-    // 2. A Função Hash (Função de Dispersão)
-    // Usa o hashCode nativo do Java e aplica o operador resto (%) para caber no array
-    private int hashFunc(String key) {
-        int hash = key.hashCode();
-        return Math.abs(hash) % capacity;
-    }
-
     // 3. Operação de Inserção (Put)
     public void insert(String key, String pos, String definition) {
-        int index = hashFunc(key);
+        int index = hashFunc.hash(key, capacity);
         Node currentNode = table[index];
 
         // Caso 1: A posição está vazia (Sem colisão)
@@ -90,7 +85,7 @@ public class HashTable {
 
     // 4. Operação de Busca (Get)
     public Node search(String key) {
-        int index = hashFunc(key);
+        int index = hashFunc.hash(key, capacity);
         Node currentNode = table[index];
 
         // Percorre a lista encadeada no índice gerado
@@ -105,7 +100,7 @@ public class HashTable {
 
     // 5. Operação de Remoção (Delete)
     public boolean remove(String key) {
-        int index = hashFunc(key);
+        int index = hashFunc.hash(key, capacity);
         Node currentNode = table[index];
         Node previousNode = null;
 
@@ -126,7 +121,7 @@ public class HashTable {
         return false; // Chave não encontrada
     }
 
-    public int getSize() {
+    public int getCapacity() {
         return capacity;
     }
 
