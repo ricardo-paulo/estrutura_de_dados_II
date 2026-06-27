@@ -6,10 +6,19 @@ import io.ricardo_paulo.HashTable.enums.HashFunc;
 
 public class HashTable {
 
-    private final Node[] table;
-    private final int capacity;
+    private Node[] table;
+    private int capacity;
     private final HashFunc hashFunc;
     private int size = 0;
+    private int readPercentage = 100;
+
+    public HashTable(int capacity, HashFunc hashFunc) {
+
+        this.capacity = capacity;
+        this.hashFunc = hashFunc;
+        this.table = new Node[this.capacity];
+        this.readPercentage = 0;
+    }
 
     public HashTable(HashFunc hashFunc) {
 
@@ -20,9 +29,9 @@ public class HashTable {
 
         this.hashFunc = hashFunc;
         this.capacity = words.length;
-        this.table = new Node[capacity];
+        this.table = new Node[this.capacity];
 
-        for (int w = 0; w < capacity; w++) {
+        for (int w = 0; w < this.capacity; w++) {
 
             this.insert(words[w], pos[w], definitions[w]);
 
@@ -36,6 +45,7 @@ public class HashTable {
             System.out.println("O percentual de carregamento dos dados passado é inválido. Ele deve ser: 0 < p ≤ 100");
         }
 
+        this.readPercentage = percent;
         this.hashFunc = hashFunc;
         DictionaryLists rawLists = new Data().getDictionary(percent);
         String[] words = rawLists.getWords();
@@ -84,6 +94,10 @@ public class HashTable {
         // Insere o novo nó no final da lista encadeada existente
         currentNode.next = new Node(key, pos, definition);
         size++;
+
+        if (getLoadFactor() >= 0.75)
+            rehash();
+
     }
 
     // 4. Operação de Busca (Get)
@@ -138,6 +152,31 @@ public class HashTable {
         return (double) size/capacity;
     }
 
+    public void rehash() {
+        int newCapacity = this.capacity * 2;
+        HashTable newHashTable = new HashTable(newCapacity, this.hashFunc);
+
+        for (Node n : this.table) {
+            if (n != null) {
+                insertRecursively(newHashTable, n);
+            }
+        }
+
+        this.table = newHashTable.table.clone();
+        this.capacity = newCapacity;
+        this.size = newHashTable.size;
+    }
+
+    private void insertRecursively(HashTable newHashTable, Node current) {
+
+        if (current == null)
+            return;
+
+        insertRecursively(newHashTable, current.next);
+        newHashTable.insert(current.key, current.pos, current.definition);
+
+    }
+
     // Método auxiliar para exibir a tabela na aula
     public void printTable() {
 
@@ -150,7 +189,6 @@ public class HashTable {
                 System.out.print("NULL");
             } else {
                 while (currentNode != null) {
-                    // System.out.print("{" + currentNode.key + " => " + currentNode.value + "}");
                     System.out.printf("{ %s => %s, %s }", currentNode.key, currentNode.pos, currentNode.definition);
                     if (currentNode.next != null) {
                         System.out.print(" -> ");

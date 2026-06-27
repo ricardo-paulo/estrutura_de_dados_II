@@ -61,6 +61,14 @@ public class Main {
         System.out.println("Itens adicionados: " + dictionary90.getSize());
         System.out.println("Capacidade: " + dictionary90.getCapacity());
 
+        System.out.println();
+
+        System.out.println("SIMULAÇÃO DE REHASHING");
+        HashTable reHashing = new HashTable(HashFunc.MULTIPLICATION);
+        System.out.println("Fator de carga original: " + reHashing.getLoadFactor());
+        reHashing.rehash();
+        System.out.println("Fator de carga após redimensionamento: " + reHashing.getLoadFactor());
+
         // ---------------------------------------------------------------------
 
         // dictionary.printTable();
