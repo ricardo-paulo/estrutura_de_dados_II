@@ -15,6 +15,24 @@ Não é permitido o uso de bibliotecas ou quaisquer outras estruturas de dados p
 - Lidia Cruz de Araújo
 - Paulo Ricardo Rodrigues Silva
 
+# Modo de Utilização
+
+## Pacote JAR
+
+Para utilizar o pacote JAR, basta baixar a versão mais recente e executar o seguinte comando no terminal, no mesmo diretório do arquivo *.jar*:
+
+```bash
+java -jar *nome_do_pacote*.jar
+```
+
+## Código Fonte
+
+Para utilização da aplicação diretamente com o código fonte, é necessário fazer o clone do repositório, importar as dependências utilizando Gradle e rodar o seguinte comando no terminal, dentro da raiz do projeto:
+
+```bash
+.\gradlew run
+```
+
 # Definições
 
 ## Fonte de dados
@@ -38,8 +56,6 @@ O arquivo foi convertido no formato JSON, para maior praticidade na leitura do a
 
 # Tarefas
 
-## Código
-
 - [x]  Converter o arquivo CSV para JSON.
 - [x]  Tradução do código base.
 - [x]  Leitura da Base de Dados.
@@ -59,12 +75,3 @@ O arquivo foi convertido no formato JSON, para maior praticidade na leitura do a
 - [x]  Calcular fator de carga e exibir no terminal.
 - [x]  Obter o tempo de busca e de inserção da tabela hash quando ela estiver 50% e 90% cheia. Ou seja quando estiver com metade dos dados carregados e quando estiver com 90% dos dados carregados.
 - [x]  Criar método para retorno de quantas colisões ocorreram. Incluir contador logo no método de inserção e armazenar a contagem em uma variável privada da classe.
-
-## Análise
-
-- [ ]  Fazer leitura do Fator de Carga quando *alfa* for maior que 1 e analisar o impacto disso no encadeamento.
-- [ ]  Fazer leitura do tempo de busca em uma tabela 50% e 90% cheia.
-- [ ]  Fazer leitura do tempo de inserção de uma tabela 50% e 90% cheia.
-- [ ]  Gerar gráfico simples comparando o número de colisões que ocorrem utilizando os dois métodos de hashing e incluir ao documento, explicando brevemente o que se vê.
-- [ ]  Explicar como a tabela deve se comportar para realizar o Rehash (redimensionamento) quando o fator de carga atingir um fator limite crítico arbitrário (Ex.: *alfa*=0,75).
-- [ ]  Comparar os tempos de busca, remoção e inserção de uma tabela de dispersão que utiliza lista encadeada (como método de resolução de colisões) e a função hashing que teve melhor resultado.
